@@ -99,6 +99,15 @@
                 },
                 enumerable: true
             });
+            Object.defineProperty(this, "ignoreSSLErrors", {
+                get: function() {
+                    return this.webClient.ignoreSSLErrors;
+                },
+                set: function(value) {
+                    return this.webClient.ignoreSSLErrors = value;
+                },
+                enumerable: true
+            });
             Object.defineProperty(this, "timeout", {
                 get: function() {
                     return this.webClient.timeoutInterval;
@@ -223,30 +232,30 @@
                 }
             }
         };
-XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
-    var i;
-    var headerX = /(\w+):(.*)/g;
-    var rHeader = [];
-    var found = false;
-    var h = this.webClient.requestHeaders;
-    if (h) {
-        for (i = 0; i < h; i++) {
-            headerX.lastIndex = 0;
-            rHeader = headerX.exec(h[i]);
-            if (rHeader) {
-                if (rHeader[1] === header) {
-                    h[i] = header + ':' + value;
-                    found = true;
-                    break;
+        XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
+            var i;
+            var headerX = /(\w+):(.*)/g;
+            var rHeader = [];
+            var found = false;
+            var h = this.webClient.requestHeaders;
+            if (h) {
+                for (i = 0; i < h; i++) {
+                    headerX.lastIndex = 0;
+                    rHeader = headerX.exec(h[i]);
+                    if (rHeader) {
+                        if (rHeader[1] === header) {
+                            h[i] = header + ':' + value;
+                            found = true;
+                            break;
+                        }
+                    }
                 }
             }
-        }
-    }
-    if (!found) {
-        h.push(header + ':' + value);
-    }
-    this.webClient.requestHeaders = h;
-};
+            if (!found) {
+                h.push(header + ':' + value);
+            }
+            this.webClient.requestHeaders = h;
+        };
 
         /*function XMLHttpRequestUpload() {
             var onabortList = [];
