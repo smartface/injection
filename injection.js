@@ -188,10 +188,11 @@
         XMLHttpRequest.prototype.getResponseHeader = function(header) {
             var value = null;
             var i;
-            var headerX = /(\w+):(.*)/g;
+            var headerX = /([a-zA-Z0-9_-]+):(.*)/g;
             var rHeader = [];
             if (this.webClient.responseHeaders) {
                 for (i = 0; i < this.webClient.responseHeaders.length; i++) {
+                    headerX.lastIndex = 0;
                     rHeader = headerX.exec(this.webClient.responseHeaders[i]);
                     if (rHeader) {
                         if (rHeader[1] === header) {
@@ -201,7 +202,7 @@
                     }
                 }
             }
-            return value;
+            return value !== null ? value.trim() : value;
         };
         XMLHttpRequest.prototype.open = function(method, url, asynch, user, password) {
             this.readyState = 1;
