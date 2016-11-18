@@ -8,11 +8,8 @@
             /*var upload = new XMLHttpRequestUpload();*/
 
             function setResponseCode() {
-                var statusLine = webClient.responseHeaders[0];
-                var rStatusSplitter = /HTTP\x2F\d+(\x2E\d+)? ((\d+)(.+))/g;
-                var statusParts = rStatusSplitter.exec(statusLine);
-                status = Number(statusParts[3]);
-                statusText = statusParts[2];
+                var statusCode = webClient.responseStatusCode;
+                status = Number(statusCode);
             }
 
             function onComplete(e) {
