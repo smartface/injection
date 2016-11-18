@@ -10,21 +10,26 @@ gulp.task("create-injection", function() {
         if (err) return console.error(err);
 
         data = data.toString();
-        var hex = asciiToHex(data, "0x00");
+        var hex = asciiToHex(data, "0x", "0x00");
+        hex = hex.replaceAll(" ", ", ");
+        hex = "unsigned char pre[] = { " + hex + " };";
 
-        fs.writeFile(INJECTION_OUTPUT, hex, function(err, data) {
+        fs.writeFile(INJECTION_OUTPUT, hex, function(err) {
             if (err) return console.error(err);
             pushToGithub();
         });
     });
 });
 
-function asciiToHex(string, delimiter) {
-    var hex = [];
+function asciiToHex(string, delimiter, nullByte) {
+    var hexArray = [],
+        hex;
     for (var i in string) {
-        hex.push(Number(string.charCodeAt(i)).toString(16));
+        hex = Number(string.charCodeAt(i)).toString(16);
+        hex.length == 1 && (hex = "0" + hex);
+        hexArray.push(hex);
     }
-    return hex.join(" " + delimiter || "");
+    return delimiter + hexArray.join(" " + delimiter || "") + " " + nullByte;
 }
 
 function pushToGithub() {
@@ -35,3 +40,8 @@ function pushToGithub() {
             if (stderr) return console.error(stderr);
         });
 }
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
