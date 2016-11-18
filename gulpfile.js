@@ -24,7 +24,7 @@ gulp.task("create-injection", function() {
 function asciiToHex(string, delimiter, nullByte) {
     var hexArray = [],
         hex;
-    for (var i in string) {
+    for (var i = 0; i < string.length; ++i) {
         hex = Number(string.charCodeAt(i)).toString(16);
         hex.length == 1 && (hex = "0" + hex);
         hexArray.push(hex);
