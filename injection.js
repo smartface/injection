@@ -986,7 +986,7 @@
                 homeDir = process.env.HOME;
             }
 
-            var paths = ["", "node_modules" /*path.resolve(process.execPath, '..', '..', 'lib', 'node')*/ ];
+            var paths = ["", "node_modules", "dist" /*path.resolve(process.execPath, '..', '..', 'lib', 'node')*/ ];
 
             if (homeDir) {
                 paths.unshift(path.resolve(homeDir, '.node_libraries'));
