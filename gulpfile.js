@@ -17,9 +17,9 @@ gulp.task("create-injection", done => {
         fs.writeFile(INJECTION_OUTPUT, hex, function(err) {
             if (err) return console.error(err);
             pushToGithub();
+            done();
         });
     });
-    done();
 });
 
 function asciiToHex(string, delimiter, nullByte) {
