@@ -17,7 +17,6 @@ gulp.task("create-injection", done => {
         fs.writeFile(INJECTION_OUTPUT, hex, function(err) {
             if (err) return console.error(err);
             pushToGithub();
-            console.log("Push to github");
         });
     });
     done();
