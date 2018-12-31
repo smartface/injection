@@ -5,7 +5,7 @@ const exec = require('child_process').exec;
 const INJECTION_INPUT = "injection.js";
 const INJECTION_OUTPUT = "inc/injection.h";
 
-gulp.task("create-injection", function() {
+gulp.task("create-injection", done => {
     fs.readFile(INJECTION_INPUT, function(err, data) {
         if (err) return console.error(err);
 
@@ -17,8 +17,10 @@ gulp.task("create-injection", function() {
         fs.writeFile(INJECTION_OUTPUT, hex, function(err) {
             if (err) return console.error(err);
             pushToGithub();
+            console.log("Push to github");
         });
     });
+    done();
 });
 
 function asciiToHex(string, delimiter, nullByte) {

@@ -1,4 +1,4 @@
-/* globals SMF, DOMParser */
+/* globals SMF, DOMParser, sfconsole */
 (function() {
     var injections = {},
         i;
@@ -286,7 +286,71 @@
 })();
 
 (function() {
+    var TYPE = {
+        LOG: "console.log",
+        ERROR: "console.error",
+        WARN: "console.warn",
+        INFO: "console.info"
+    };
+    var timerCollection = {};
+    
+    global.console = {};
+    
+    global.console.log = function() {
+        consoleWrapper(stringifyArguments(arguments));
+    };
+    
+    global.console.error = function() {
+        consoleWrapper(stringifyArguments(arguments), TYPE.ERROR);
+    };
+    
+    global.console.warn = function(str) {
+        consoleWrapper(stringifyArguments(arguments), TYPE.WARN);
+    };
+    
+    global.console.info = function(str) {
+        consoleWrapper(stringifyArguments(arguments), TYPE.INFO);
+    };
+    
+    global.console.time = function(key = "default") {
+        timerCollection[key] = new Date();
+    };
+    
+    global.console.timeEnd = function(key = "default") {
+        let startTime = timerCollection[key];
+        if(!startTime) {
+            global.console.warn("Timer " + key + " does not exist!");
+        } else {
+            timerCollection[key] = null;
+            global.console.log(key + " : " + (new Date() - startTime) + " ms");
+        }
+    };
+    
+    function consoleWrapper(str, type = TYPE.LOG) {
+        sfconsole.log(str, type, "" + new Date().getTime());
+    }
+    
+    function stringifyArguments(args) {
+        let toArray = [];
+        let arrayLength = args.length;
+        for (let i = 0; i < arrayLength; i++) {
+            toArray.push(safeJSONStringify(args[i]));
+        }
+        return safeJSONStringify(toArray);
+    }
+    
+    function safeJSONStringify(arg) {
+        let result;
+        try { 
+            result = JSON.stringify(arg);
+        } catch (err) {
+            result = err.message;
+        }
+        return result;
+    }
+})();
 
+(function() {
     function debug(message, title) {
         if (typeof message === "object") {
             message = JSON.stringify(message, null, "\t");
@@ -2372,5 +2436,4 @@
     }
 
     global.initRequire = initRequire;
-
 })();
